@@ -1,0 +1,165 @@
+Ulan, [25.08.21 18:20]
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from expenses.models import Expense, Category
+from expenses.serializers import ExpenseSerializer
+from users.models import Account
+
+
+@csrf_exempt
+@api_view(['POST'])
+def expense_create_view(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        user = request.user
+        account = Account.objects.filter(user=user).first()
+        category = Category.objects.filter(id=category_id).first()
+        expense = Expense.objects.create(
+            category=category,
+            title=title,
+            description=description,
+            price=price,
+            account=account
+        )
+
+    return HttpResponse(expense, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def expenses_list_api_view(request):
+    user = request.user
+    account = Account.objects.filter(user=user).first()
+    account_expenses = Expense.objects.filter(account=account)
+
+    serializer = ExpenseSerializer(account_expenses, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def expense_retrieve_api_view(request, pk):
+    expense = Expense.objects.filter(id=pk).first()
+    serializer = ExpenseSerializer(expense)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+Ulan, [25.08.21 18:22]
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+settings_local.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# dotenv
+.env
+*.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# IDEs
+.vscode
+/.idea
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+
+.DS_Store
+*.sqlite3
+media/
+static/
+*.pyc
+*.db
+*.pid
