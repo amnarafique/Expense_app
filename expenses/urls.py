@@ -1,13 +1,13 @@
-from django.urls import path
-from .views import (
-    # ExpenseCreateAPIView, ExpenseListAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
-    # ExpenseDeleteAPIView,
-    ExpenseListCreateAPIVIew, ExpenseRetrieveUpdateDeleteView
-)
-urlpatterns = [
-    path('',ExpenseListCreateAPIVIew .as_view()),
-    path('<int:pk>/', ExpenseRetrieveUpdateDeleteView.as_view()),
-]
+# from django.urls import path
+# from .views import (
+#     # ExpenseCreateAPIView, ExpenseListAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
+#     # ExpenseDeleteAPIView,
+#     ExpenseListCreateAPIVIew, ExpenseRetrieveUpdateDeleteView
+# )
+# urlpatterns = [
+#     path('',ExpenseListCreateAPIVIew .as_view()),
+#     path('<int:pk>/', ExpenseRetrieveUpdateDeleteView.as_view()),
+# ]
 
 # urlpatterns = [
 #     path('create/', ExpenseCreateAPIView.as_view()),

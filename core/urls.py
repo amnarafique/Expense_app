@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from .yasg import urlpatterns as docs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,6 +12,8 @@ urlpatterns = [
         path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         path('users/', include('users.urls')),
-        path('expenses/', include('expenses.urls')),
+        path('expenses/', include('expenses.routers')),
     ]))
 ]
+
+urlpatterns += docs

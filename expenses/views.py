@@ -11,12 +11,22 @@ from expenses.permissions import IsOwner
 from expenses.serializers import ExpenseSerializer, ExpenseDetailSerializer
 from users.models import Account
 from rest_framework import generics
-from rest_framework import permissions
+from rest_framework import permissions, viewsets
+
+
+class ExpenseViewSet(viewsets.ModelViewSet):
+    serializer_class = ExpenseSerializer
+    queryset = Expense.objects.all()
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
 
 
 class ExpenseListCreateAPIVIew(generics.ListCreateAPIView):
+
+    """
+    THis creates an expense to login user
+    """
     serializer_class = ExpenseSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(account=self.request.user.account)
