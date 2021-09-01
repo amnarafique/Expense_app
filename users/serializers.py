@@ -45,5 +45,14 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
         return account
 
 
-
-
+class AccountDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'salary',
+            'balance',
+        )

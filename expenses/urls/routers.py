@@ -1,5 +1,5 @@
 
-from .views import ExpenseViewSet
+from expenses.views import ExpenseViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()

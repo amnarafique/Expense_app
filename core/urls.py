@@ -12,7 +12,7 @@ urlpatterns = [
         path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         path('users/', include('users.urls')),
-        path('expenses/', include('expenses.routers')),
+        path('expenses/', include('expenses.urls.urls')),
     ]))
 ]
 

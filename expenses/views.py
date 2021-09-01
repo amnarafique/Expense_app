@@ -1,4 +1,3 @@
-
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
@@ -9,6 +8,8 @@ from rest_framework.response import Response
 from expenses.models import Expense, Category
 from expenses.permissions import IsOwner
 from expenses.serializers import ExpenseSerializer, ExpenseDetailSerializer
+from expenses.services import TopUpService
+from expenses.validators import TopUpValidator
 from users.models import Account
 from rest_framework import generics
 from rest_framework import permissions, viewsets
@@ -21,8 +22,21 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
 
 
-class ExpenseListCreateAPIVIew(generics.ListCreateAPIView):
+class BalanceIncreaseAPIView(generics.GenericAPIView):
+    validator_class = TopUpValidator
+    service_class = TopUpService
 
+    def post(self, request, *args, **kwargs):
+        balance = request.data.get('balance')
+        if not self.validator_class.validate_balance(balance):
+            return Response('Pass balance to top up', status=status.HTTP_400_BAD_REQUEST)
+
+        self.service_class.top_up(request.user, balance)
+
+        return Response('Ok', status=status.HTTP_200_OK)
+
+
+class ExpenseListCreateAPIVIew(generics.ListCreateAPIView):
     """
     THis creates an expense to login user
     """
@@ -39,8 +53,6 @@ class ExpenseRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
-
-
 
 # class ExpenseCreateAPIView(generics.CreateAPIView):
 #     serializer_class = ExpenseSerializer
@@ -74,19 +86,6 @@ class ExpenseRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Expense.objects.all()
 #     serializer_class = ExpenseSerializer
 #     permission_classes = (permissions.IsAuthenticated, IsOwner)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # @csrf_exempt
