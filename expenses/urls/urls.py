@@ -1,9 +1,10 @@
 from django.urls import path
-from expenses.views import BalanceIncreaseAPIView
+from expenses.views import BalanceIncreaseAPIView, CategoryAPIView
 from .routers import urlpatterns as routers
 
 urlpatterns = [
-    path('balance/top-up/', BalanceIncreaseAPIView.as_view())
+    path('balance/top-up/', BalanceIncreaseAPIView.as_view()),
+    path('category/<int:pk>/', CategoryAPIView.as_view())
 ]
 
 urlpatterns += routers

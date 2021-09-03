@@ -2,4 +2,11 @@ class TopUpValidator:
 
     @classmethod
     def validate_balance(cls, balance: float) -> bool:
-       return False if not balance else True
+       if not balance:
+           return False
+
+       try:
+           float(balance)
+       except ValueError:
+           return False
+       return True

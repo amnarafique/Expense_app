@@ -1,0 +1,2 @@
+redis-server - run redis server
+export $(grep -v '^#' .env | xargs)

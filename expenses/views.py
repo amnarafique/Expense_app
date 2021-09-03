@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from expenses.models import Expense, Category
 from expenses.permissions import IsOwner
-from expenses.serializers import ExpenseSerializer, ExpenseDetailSerializer
+from expenses.serializers import ExpenseSerializer, ExpenseDetailSerializer, CategorySerializer
 from expenses.services import TopUpService
 from expenses.validators import TopUpValidator
 from users.models import Account
@@ -18,8 +18,14 @@ from rest_framework import permissions, viewsets
 class ExpenseViewSet(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     queryset = Expense.objects.all()
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(account=self.request.user.account)
+        price = self.request.data.get('price')
+        account = self.request.user.account.balance
+        account.balance -=float(price)
+        account.save()
 
 
 class BalanceIncreaseAPIView(generics.GenericAPIView):
@@ -34,6 +40,14 @@ class BalanceIncreaseAPIView(generics.GenericAPIView):
         self.service_class.top_up(request.user, balance)
 
         return Response('Ok', status=status.HTTP_200_OK)
+
+
+class CategoryAPIView(generics.RetrieveAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
+
 
 
 class ExpenseListCreateAPIVIew(generics.ListCreateAPIView):
